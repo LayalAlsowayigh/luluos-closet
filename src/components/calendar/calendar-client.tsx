@@ -159,7 +159,7 @@ export function CalendarClient() {
               onMouseLeave={e => (e.currentTarget.style.background = '#ffffff')}>
               {/* Day number */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: isToday ? 13 : 12, fontWeight: isToday ? 700 : 400, color: isToday ? '#0a0a0a' : '#737373', background: isToday ? '#0a0a0a' : 'transparent', color: isToday ? '#ffffff' : '#737373', width: isToday ? 24 : 'auto', height: isToday ? 24 : 'auto', borderRadius: isToday ? '50%' : 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: isToday ? 13 : 12, fontWeight: isToday ? 700 : 400, color: isToday ? '#0a0a0a' : '#737373', background: isToday ? '#0a0a0a' : 'transparent', width: isToday ? 24 : 'auto', height: isToday ? 24 : 'auto', borderRadius: isToday ? '50%' : 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {day}
                 </span>
                 {!entry && (

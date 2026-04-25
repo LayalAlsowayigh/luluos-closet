@@ -1,26 +1,24 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ShirtIcon, SparklesIcon, MessageSquareIcon, UserIcon } from 'lucide-react'
+import { ShirtIcon, SparklesIcon, MessageSquareIcon, UserIcon, CalendarIcon } from 'lucide-react'
 
 const NAV = [
-  { href: '/wardrobe', label: 'Wardrobe',   icon: ShirtIcon },
-  { href: '/style',    label: 'Style Me',   icon: SparklesIcon },
-  { href: '/chat',     label: 'Stylist',    icon: MessageSquareIcon },
-  { href: '/profile',  label: 'Profile',    icon: UserIcon },
+  { href: '/wardrobe',  label: 'Wardrobe',  icon: ShirtIcon },
+  { href: '/style',     label: 'Style Me',  icon: SparklesIcon },
+  { href: '/calendar',  label: 'Calendar',  icon: CalendarIcon },
+  { href: '/chat',      label: 'Stylist',   icon: MessageSquareIcon },
+  { href: '/profile',   label: 'Profile',   icon: UserIcon },
 ]
 
 export function Sidebar() {
   const path = usePathname()
   return (
     <aside style={{ width: 240, borderRight: '1px solid #e5e5e5', position: 'fixed', top: 0, left: 0, height: '100vh', background: '#ffffff', display: 'flex', flexDirection: 'column', zIndex: 50 }}>
-      {/* Logo */}
       <div style={{ padding: '28px 28px 24px', borderBottom: '1px solid #e5e5e5' }}>
         <p style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a3a3a3', marginBottom: 2 }}>Luluo&apos;s</p>
         <p style={{ fontFamily: 'Georgia, serif', fontSize: 22, fontWeight: 300, fontStyle: 'italic', color: '#0a0a0a' }}>Closet</p>
       </div>
-
-      {/* Nav */}
       <nav style={{ flex: 1, padding: '20px 16px' }}>
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = path === href || path.startsWith(href + '/')
@@ -32,8 +30,6 @@ export function Sidebar() {
           )
         })}
       </nav>
-
-      {/* Bottom */}
       <div style={{ padding: '20px 28px', borderTop: '1px solid #e5e5e5' }}>
         <p style={{ fontSize: 10, color: '#d4d4d4', letterSpacing: '0.08em', textTransform: 'uppercase' }}>AI-Powered Styling</p>
       </div>

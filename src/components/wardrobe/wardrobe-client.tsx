@@ -8,7 +8,30 @@ import { toast } from 'sonner'
 function fileToBase64(file: File): Promise<string> {
   return new Promise((res, rej) => {
     const reader = new FileReader()
-    reader.onload = () => res((reader.result as string).split(',')[1])
+    const img = new Image()
+
+    reader.onload = () => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          rej(new Error('Canvas failed'))
+          return
+        }
+
+        ctx.drawImage(img, 0, 0)
+
+        const pngDataUrl = canvas.toDataURL('image/png')
+        res(pngDataUrl.split(',')[1])
+      }
+
+      img.onerror = () => rej(new Error('Image load failed'))
+      img.src = reader.result as string
+    }
+
     reader.onerror = () => rej(new Error('Read failed'))
     reader.readAsDataURL(file)
   })
@@ -34,7 +57,7 @@ export function WardrobeClient() {
     setStep('uploading')
     const base64 = await fileToBase64(file)
     const url = URL.createObjectURL(file)
-    setPreview({ url, base64, mimeType: file.type })
+    setPreview({ url, base64, mimeType: 'image/png' })
     setStep('analyzing')
     try {
       const res = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ imageBase64: base64, mimeType: file.type }) })
@@ -49,11 +72,53 @@ export function WardrobeClient() {
   }, [])
 
   async function handleRemoveBg() {
+    if (!preview) return
+  
     setRemovingBg(true)
-    await new Promise(r => setTimeout(r, 1500))
-    setBgRemoved(true)
+  
+    try {
+      const res = await fetch("/api/remove-bg", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageBase64: preview.base64,
+        }),
+      })
+  
+      if (!res.ok) {
+        throw new Error("remove.bg failed")
+      }
+  
+      const blob = await res.blob()
+      const cleanUrl = URL.createObjectURL(blob)
+  
+      // update preview image
+      const reader = new FileReader()
+
+reader.onloadend = () => {
+  const base64 = (reader.result as string).split(",")[1]
+
+  setPreview(prev => prev ? {
+    ...prev,
+    url: cleanUrl,
+    base64: base64,
+    mimeType: "image/png",
+  } : null)
+}
+
+reader.readAsDataURL(blob)
+  
+      setBgRemoved(true)
+      toast.success("Background removed successfully")
+  
+    } catch (err) {
+      console.error(err)
+      toast.error("Failed to remove background")
+    }
+  
     setRemovingBg(false)
-    toast.success('Background removed. Connect remove.bg API for full effect.')
   }
 
   async function confirmAdd() {
@@ -203,9 +268,7 @@ export function WardrobeClient() {
                 <p style={{ fontSize: 10, color: '#a3a3a3', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{item.color} · {item.category}</p>
               </div>
               <button onClick={() => { deleteItem(item.id); toast.success('Item removed.') }}
-                style={{ position: 'absolute', top: 8, right: 8, width: 28, height: 28, background: '#ffffff', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', opacity: 0, transition: 'opacity 0.2s' }}
-                onMouseOver={e => (e.currentTarget.style.opacity = '1')}
-                onMouseOut={e => (e.currentTarget.style.opacity = '0')}>
+                style={{ position: 'absolute', top: 8, right: 8, width: 28, height: 28, background: '#ffffff', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
             </div>

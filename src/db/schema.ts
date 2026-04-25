@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, timestamp, integer, pgEnum } from 'drizzle-orm/pg-core'
+import { pgTable, text, boolean, timestamp, pgEnum } from 'drizzle-orm/pg-core'
 
 export const categoryEnum = pgEnum('category', ['Tops', 'Bottoms', 'Dresses', 'Outerwear', 'Shoes', 'Accessories', 'Bags'])
 
@@ -35,5 +35,14 @@ export const chatMessages = pgTable('chat_messages', {
   userId: text('user_id').notNull(),
   role: text('role').notNull(),
   content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const calendarOutfits = pgTable('calendar_outfits', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: text('user_id').notNull(),
+  date: text('date').notNull(),
+  itemIds: text('item_ids').array().notNull().default([]),
+  note: text('note'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 })

@@ -36,3 +36,9 @@ body {
 @keyframes pulse { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
 
 .fade-up { animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both; }
+@media (max-width: 768px) {
+  .wardrobe-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+}

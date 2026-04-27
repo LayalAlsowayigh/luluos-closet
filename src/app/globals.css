@@ -1,44 +1,139 @@
-@import "tailwindcss";
-
-@theme inline {
-  --font-sans: var(--font-geist);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #f5f5f5;
-  --muted-foreground: #737373;
+  --bg: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f5f5f5;
   --border: #e5e5e5;
-  --input: #e5e5e5;
-  --ring: #0a0a0a;
-  --card: #ffffff;
+  --text-primary: #0a0a0a;
+  --text-secondary: #737373;
+  --text-muted: #a3a3a3;
+  --text-faint: #d4d4d4;
+  --sidebar-bg: #ffffff;
+  --card-bg: #ffffff;
+}
+
+.dark,
+[data-theme='dark'] {
+  --bg: #0f0f0f;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1f1f1f;
+  --border: #464646;
+  --text-primary: #fafafa;
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
+  --text-faint: #333333;
+  --sidebar-bg: #0f0f0f;
+  --card-bg: #141414;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  color: var(--text-primary);
+  transition: background 0.2s, color 0.2s;
+  font-family: var(--font-geist), system-ui, sans-serif;
 }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: #e5e5e5; border-radius: 2px; }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+.fade-up {
+  animation: fadeUp 0.3s ease forwards;
+}
 
-.fade-up { animation: fadeUp 0.4s cubic-bezier(.22,1,.36,1) both; }
 @media (max-width: 768px) {
-  .wardrobe-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
-  }
+  .desktop-sidebar { display: none !important; }
+  .mobile-header { display: flex !important; }
+  .mobile-nav { display: flex !important; }
+  .main-content { margin-left: 0 !important; }
+  .main-content main { padding: 72px 16px 80px !important; }
+  .wardrobe-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* Fix dark mode for all components */
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+[data-theme='dark'] input,
+[data-theme='dark'] select,
+[data-theme='dark'] textarea {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme='dark'] button:not([style*="background: #0a0a0a"]):not([style*="background: rgb(10"]) {
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme='dark'] [style*="border: '1px dashed #e5e5e5'"],
+[data-theme='dark'] [style*="border: 1px dashed #e5e5e5"] {
+  border-color: var(--border) !important;
+}
+
+[data-theme='dark'] [style*="color: '#0a0a0a'"],
+[data-theme='dark'] [style*="color: #0a0a0a"] {
+  color: var(--text-primary) !important;
+}
+
+[data-theme='dark'] [style*="color: '#737373'"],
+[data-theme='dark'] [style*="color: #737373"] {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme='dark'] [style*="color: '#a3a3a3'"],
+[data-theme='dark'] [style*="color: #a3a3a3"] {
+  color: var(--text-muted) !important;
+}
+
+[data-theme='dark'] [style*="borderBottom: '1px solid #e5e5e5'"],
+[data-theme='dark'] [style*="borderBottom: 1px solid #e5e5e5"],
+[data-theme='dark'] [style*="border-bottom: 1px solid #e5e5e5"] {
+  border-color: var(--border) !important;
+}
+
+[data-theme='dark'] [style*="background: '#f5f5f5'"],
+[data-theme='dark'] [style*="background: #f5f5f5"] {
+  background: var(--bg-tertiary) !important;
+}
+
+[data-theme='dark'] [style*="background: '#fafafa'"],
+[data-theme='dark'] [style*="background: #fafafa"] {
+  background: var(--bg-secondary) !important;
+}
+
+[data-theme='dark'] [style*="background: '#ffffff'"],
+[data-theme='dark'] [style*="background: #ffffff"] {
+  background: var(--bg) !important;
+}
+
+[data-theme='dark'] [style*="border: '1px solid #e5e5e5'"],
+[data-theme='dark'] [style*="border: 1px solid #e5e5e5"] {
+  border-color: var(--border) !important;
+}
+
+.main-content {
+  background: var(--bg) !important;
+}
+
+.main-content main {
+  background: var(--bg) !important;
 }
